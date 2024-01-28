@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "ChangePassword", urlPatterns = {"/change"})
 public class ChangePassword extends HttpServlet {
 
+    private static final String CHANGE_JSP_PATH = "/Views/change.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -60,9 +62,7 @@ public class ChangePassword extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        processRequest(request, response);
-
-        request.getRequestDispatcher("/Views/change.jsp").forward(request, response);
+        request.getRequestDispatcher(CHANGE_JSP_PATH).forward(request, response);
     }
 
     /**
@@ -87,12 +87,12 @@ public class ChangePassword extends HttpServlet {
             // không tồn tại
             String ms = "Old password is incorrect";
             request.setAttribute("ms", ms);
-            request.getRequestDispatcher("/Views/change.jsp").forward(request, response);
+            request.getRequestDispatcher(CHANGE_JSP_PATH).forward(request, response);
         } else {
             // dung old pass
             if (!p.equals(rpass)) {
                 request.setAttribute("ms", "RePassword error");
-                request.getRequestDispatcher("/Views/change.jsp").forward(request, response);
+                request.getRequestDispatcher(CHANGE_JSP_PATH).forward(request, response);
             } else {
                 Account ac = new Account(u, p);
                 d.change(ac);

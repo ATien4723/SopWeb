@@ -38,7 +38,7 @@ public class ManageController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
+
         DAO d = new DAO();
         try {
             String service = request.getParameter("Service");
@@ -57,10 +57,10 @@ public class ManageController extends HttpServlet {
                 String pId = request.getParameter("searchId");
 
                 try {
-                    if (pId != "") {
+                    if (pId != null && !pId.equals("")) {
                         pid = Integer.parseInt(pId);
-                    }    
-                    Vector<Product> list = new Vector<>();
+                    }
+                    List<Product> list = new ArrayList<>();
                     Product p = d.getProductManageById(pid);
                     if (p == null) {
                         request.setAttribute("mess", "Not found this product");
@@ -76,7 +76,6 @@ public class ManageController extends HttpServlet {
             }
 
             if (service.equals("addProduct")) {
-                String mess = "";
                 String addBtn = request.getParameter("add");
                 setCommonAttributes(request, d);
                 if (addBtn == null) {
@@ -91,16 +90,16 @@ public class ManageController extends HttpServlet {
                     String discount_raw = request.getParameter("discount");
                     String productDesc = request.getParameter("productDesc");
                     String quantity_raw = request.getParameter("quantity");
-                    if(image_raw.equals("") || image_raw == null) {
-                    image_raw = request.getParameter("beforeImage");
-                  }
+                    if (image_raw.equals("") || image_raw == null) {
+                        image_raw = request.getParameter("beforeImage");
+                    }
                     int quantity = Integer.parseInt(quantity_raw);
                     int brand_id = Integer.parseInt(brand_raw);
                     int discount = Integer.parseInt(discount_raw);
-                    
+
                     double priceImport = Double.parseDouble(pro_priceImport);
                     double priceSell = Double.parseDouble(pro_priceSell);
-                    
+
                     //will get id of current staff
                     long miliSeconds = System.currentTimeMillis();
                     Date currentDate = new Date(miliSeconds);
@@ -162,18 +161,7 @@ public class ManageController extends HttpServlet {
                     request.setAttribute("mess", "update success");
                     response.sendRedirect("Manage");
                 } else {
-//                    String pid_raw = ;
-                    int pid = 0;
-                    try {
-                        pid = Integer.parseInt(request.getParameter("pid"));
-                        Product pro = d.getProductById(pid);
-                        request.setAttribute("product", pro);
-                        setCommonAttributes(request, d);
-                        request.getRequestDispatcher("/Views/UpdateProduct.jsp").forward(request, response);
-                    } catch (Exception e) {
-                        response.sendRedirect("Views/Loi.jsp");
-                    }
-
+                    handleUpdateRequest(request, response, d);
                 }
             }
         } catch (SQLException e) {
@@ -181,12 +169,22 @@ public class ManageController extends HttpServlet {
         }
     }
 
-    public String getFormatDate() {
-        LocalDateTime myDateObj = LocalDateTime.now();
-        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = myDateObj.format(myFormatObj);
-        return formattedDate;
+    private void handleUpdateRequest(HttpServletRequest request, HttpServletResponse response, DAO d) throws IOException, ServletException {
+        int pid = 0;
+        try {
+            pid = Integer.parseInt(request.getParameter("pid"));
+            Product pro = d.getProductById(pid);
+            request.setAttribute("product", pro);
+            setCommonAttributes(request, d);
+            request.getRequestDispatcher("/Views/UpdateProduct.jsp").forward(request, response);
+        } catch (Exception e) {
+            response.sendRedirect("Views/Loi.jsp");
+        }
     }
+
+    public String getFormatDate() {
+    return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+}
 
     private void setCommonAttributes(HttpServletRequest request, DAO d) throws SQLException {
         Vector<String> list_category = d.getValueOfAtribute("category_name");
