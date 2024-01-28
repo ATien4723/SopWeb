@@ -12,7 +12,7 @@
 <%@page import="Models.*" %>
 <%@page import="java.util.*" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>

@@ -25,7 +25,7 @@ import java.util.Vector;
  */
 @WebServlet(name = "ProductServlet", urlPatterns = {"/ProductURL"})
 public class ProductServlet extends HttpServlet {
-
+    private static final String LIST_PRODUCT_ATTRIBUTE = "listProduct";
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -67,10 +67,11 @@ public class ProductServlet extends HttpServlet {
                 p.calc();
                 request.setAttribute("page", p);
 
-                request.setAttribute("listProduct", list);
+                request.setAttribute(LIST_PRODUCT_ATTRIBUTE, list);
                 setCommonAttributes(request, d);
                 request.getRequestDispatcher("Views/Home.jsp").forward(request, response);
-            }if(service.equals("clearfilter")) {
+            }
+                if(service.equals("clearfilter")) {
                 response.sendRedirect("ProductURL");
             }
             if (service.equals("filter")) {
@@ -85,7 +86,7 @@ public class ProductServlet extends HttpServlet {
                 Vector<Product> list = new Vector<>();
                 setCommonAttributes(request, d);
                 list = d.filter(category, discount);
-                request.setAttribute("listProduct", list);
+                request.setAttribute(LIST_PRODUCT_ATTRIBUTE, list);
                 request.getRequestDispatcher("Views/Home.jsp").forward(request, response);
                 //list chứa những sản phẩm sau khi đã lọc
             }
@@ -104,7 +105,7 @@ public class ProductServlet extends HttpServlet {
             if (service.equals("search")) {
                     String nameTxt = request.getParameter("keyword");
                     Vector<Product> list = d.getProductByName(nameTxt);
-                    request.setAttribute("listProduct", list);
+                    request.setAttribute(LIST_PRODUCT_ATTRIBUTE, list);
                     setCommonAttributes(request, d);
                     request.getRequestDispatcher("/Views/Home.jsp").forward(request, response);
                 }

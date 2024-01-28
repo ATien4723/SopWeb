@@ -136,5 +136,4 @@
 </body>
 }
 }
-</script>
 </html>

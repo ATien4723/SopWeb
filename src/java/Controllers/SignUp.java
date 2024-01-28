@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet(name="SignUp", urlPatterns={"/SignUp"})
 public class SignUp extends HttpServlet {
-   
+   private static final String CHANGE_JSP_SIGN = "/Views/SignUp.jsp";
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -49,7 +49,7 @@ public class SignUp extends HttpServlet {
         String role = "False";
         if(!pass.equals(re_pass)){
             request.setAttribute("mess", "RePassword error");
-            request.getRequestDispatcher("/Views/SignUp.jsp").forward(request, response);
+            request.getRequestDispatcher(CHANGE_JSP_SIGN).forward(request, response);
         }else{
             DAO dao = new DAO();
             Account a = dao.checkAccountExist(user);
@@ -58,10 +58,10 @@ public class SignUp extends HttpServlet {
                 // được signup
                 dao.signup(email, user, pass, firstName, lastName, phone, role);
                 request.setAttribute("type", "firstLogin");
-                request.getRequestDispatcher("/Views/Login.jsp").forward(request, response);
+                request.getRequestDispatcher(CHANGE_JSP_SIGN).forward(request, response);
             }
             request.setAttribute("mess", "Username or email already exist");
-            request.getRequestDispatcher("/Views/SignUp.jsp").forward(request, response);
+            request.getRequestDispatcher(CHANGE_JSP_SIGN).forward(request, response);
             //response.sendRedirect("SignUp");
             
         }
@@ -103,8 +103,4 @@ public class SignUp extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-public static void main(String[] args) {
-        DAO dao = new DAO();
-        dao.signup("trantrungahaa@gmail.com", "abcdes", "abcdes", "abcdes", "abcdes", "03333333333", "False");
-    }
 }
